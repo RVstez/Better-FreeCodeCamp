@@ -1,0 +1,3 @@
+/* Local, offline copies (Latin subset, variable weight). Google Sans: 400–700. Inter: 100–900. */
+@font-face{font-family:"Google Sans";src:url(../fonts/google-sans.woff) format("woff");font-weight:400 700;font-style:normal;font-display:swap}
+@font-face{font-family:Inter;src:url(../fonts/inter.woff) format("woff");font-weight:100 900;font-style:normal;font-display:swap}
