@@ -26,7 +26,7 @@ export function codePage({ c, loc, store }) {
   const completion = el('div', { class: 'completion' });
   const drawCompletion = () => completion.replaceChildren(
     el('div', { class: 'completion-status' + (store.isDone(c.id) ? '' : ' incomplete') }, el('span', { class: 'dot' }), el('span', {}, store.isDone(c.id) ? '✓ Completed' : 'Not completed yet')),
-    el('div', { class: 'nav-buttons' }, loc.prev ? linkBtn('← Back', `#/c/${loc.prev.id}`, 'ghost sm', 'prev') : null, loc.next ? linkBtn('Next →', `#/c/${loc.next.id}`, 'sm', 'next') : null));
+    el('div', { class: 'nav-buttons' }, loc.prev ? linkBtn('\u2190 Back', `#/c/${loc.prev.id}`, 'ghost sm', 'prev') : null, loc.next ? linkBtn('Next \u2192', `#/c/${loc.next.id}`, 'sm', 'next') : null));
   drawCompletion();
 
   btn.onclick = async () => {
@@ -46,7 +46,7 @@ export function codePage({ c, loc, store }) {
     btn.disabled = false;
   };
   return el('div', { class: 'coding-lesson' },
-    el('aside', { class: 'lesson-brief', 'aria-label': 'Step instructions' }, el('div', { class: 'section-eyebrow' }, `YOUR TASK · STEP ${loc.step}`), el('div', { class: 'prose' }, blocks(c.description)), el('div', { class: 'lesson-brief-note' }, 'Write → preview → check.', el('br'), 'Your code saves as you go.')),
+    el('aside', { class: 'lesson-brief', 'aria-label': 'Step instructions' }, el('div', { class: 'section-eyebrow' }, `YOUR TASK · STEP ${loc.step}`), el('div', { class: 'prose' }, blocks(c.description)), el('div', { class: 'lesson-brief-note' }, 'Write \u2192 preview \u2192 check.', el('br'), 'Your code saves as you go.')),
     el('div', { class: 'lesson-workspace' }, shell.root, el('div', { class: 'run-bar' }, btn, status, el('span', { class: 'run-hint' }, 'Ctrl + Shift + G')), el('div', { class: 'results-title' }, `Checks · ${c.hints.length}`), results, completion));
 }
 
@@ -103,7 +103,7 @@ export function quizPage({ c, store, onDone }) {
       if (!root.isConnected) return; // the learner left the page
       const q = qs[n]; let answered = false; const btns = [];
       const feedback = el('span', { class: 'quiz-answer-status', role: 'status', 'aria-live': 'polite' }, 'Choose the answer that fits best.');
-      const next = el('button', { class: 'btn', type: 'button', disabled: true }, n + 1 === qs.length ? 'See results →' : 'Next question →');
+      const next = el('button', { class: 'btn', type: 'button', disabled: true }, n + 1 === qs.length ? 'See results \u2192' : 'Next question \u2192');
       next.onclick = () => { if (!answered) return; ++n < qs.length ? ask() : finish(); root.querySelector('.quiz-q, .quiz-result')?.focus({ preventScroll: true }); };
       const choices = el('div', { class: 'quiz-choices' }, q.options.map(([opt], oi) => {
         const code = asChoiceCode(opt), b = el('button', { class: 'quiz-choice', type: 'button' }); b.append(code ? el('code', { class: 'choice-code' }, code) : blocks(opt, false));

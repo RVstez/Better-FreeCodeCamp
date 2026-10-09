@@ -35,7 +35,7 @@ export function setupDiscovery({ idx, store }) {
   const dialog = el('dialog', { class: 'search-dialog', 'aria-labelledby': 'searchTitle' },
     el('div', { class: 'dialog-top' }, el('h2', { id: 'searchTitle' }, 'Find your next lesson'), close),
     el('div', { class: 'search-input-wrap' }, input), el('div', { class: 'search-caption' }, 'THE WHOLE CURRICULUM. ONE SEARCH.'), results,
-    el('div', { class: 'search-footer' }, count, el('span', {}, '↑ ↓ to explore · Enter to open')));
+    el('div', { class: 'search-footer' }, count, el('span', {}, '\u2191 \u2193 to explore · Enter to open')));
   document.body.append(dialog);
   let selected = 0, items = [];
   const select = (n) => { selected = n; items.forEach((a,i) => { a.classList.toggle('selected', i === n); a.setAttribute('aria-selected', String(i === n)); }); if(items[n]) { input.setAttribute('aria-activedescendant', items[n].id); items[n].scrollIntoView({block:'nearest'}); } else input.removeAttribute('aria-activedescendant'); };
@@ -56,7 +56,7 @@ export function setupDiscovery({ idx, store }) {
   dialog.addEventListener('click', e => { if (e.target === dialog) { const r=dialog.getBoundingClientRect(); if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom) dialog.close(); } });
   searchBtn.onclick = openSearch;
 
-  const shortcutRows = [['Ctrl + K', 'Find a lesson'], ['Ctrl + B', 'Toggle navigation'], ['Ctrl + P / N', 'Previous / next step'], ['Ctrl + Shift + G', 'Check your code'], ['Ctrl + Shift + Y', 'Copy lesson link / code'], ['Ctrl + M', 'Focus editor / full screen / leave'], ['Ctrl + Q', 'Move between questions'], ['Alt + ↑ / ↓', 'Move between answers'], ['Ctrl + Alt', 'Choose the focused answer'], ['Esc', 'Close a dialog or full screen']];
+  const shortcutRows = [['Ctrl + K', 'Find a lesson'], ['Ctrl + B', 'Toggle navigation'], ['Ctrl + P / N', 'Previous / next step'], ['Ctrl + Shift + G', 'Check your code'], ['Ctrl + Shift + Y', 'Copy lesson link / code'], ['Ctrl + M', 'Focus editor / full screen / leave'], ['Ctrl + Q', 'Move between questions'], ['Alt + \u2191 / \u2193', 'Move between answers'], ['Ctrl + Alt', 'Choose the focused answer'], ['Esc', 'Close a dialog or full screen']];
   const help = el('dialog', { class: 'help-dialog', 'aria-labelledby': 'helpTitle' });
   help.append(el('div', {class:'dialog-top'},el('h2',{id:'helpTitle'},'A few useful shortcuts'),el('button',{class:'dialog-close',type:'button','aria-label':'Close shortcuts',onclick:()=>help.close()},'Esc')),
     el('p',{class:'dialog-description'},'Keep your hands on the keyboard. Stay in your flow.'),el('div',{class:'shortcut-list'},shortcutRows.map(([keys,label])=>el('div',{},el('span',{},label),el('kbd',{},keys)))),el('p',{class:'dialog-note'},'Copy uses the current step’s link. Focus a copy button to choose another link or code block. Cmd+Shift+Y also works. Some desktop browsers reserve Ctrl+N and Ctrl+P.'));
