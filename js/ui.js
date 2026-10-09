@@ -12,6 +12,7 @@ const paths = {
   exam: ['M8 3h8l4 4v14H4V3Z', 'M16 3v5h4', 'm8 14 3 3 5-6'],
   arrow: ['M4 12h15', 'm13 6 6 6-6 6'],
   check: ['m5 12 4 4L19 6'],
+  copy: ['M9 9h12v12H9Z', 'M15 9V3H3v12h6'],
   book: ['M12 5c-3-2-6-2-9-1v15c3-1 6-1 9 1 3-2 6-2 9-1V4c-3-1-6-1-9 1Z', 'M12 5v15'],
   search: ['M17 17l4 4'],
 };
@@ -55,10 +56,10 @@ export function setupDiscovery({ idx, store }) {
   dialog.addEventListener('click', e => { if (e.target === dialog) { const r=dialog.getBoundingClientRect(); if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom) dialog.close(); } });
   searchBtn.onclick = openSearch;
 
-  const shortcutRows = [['Ctrl + K', 'Find a lesson'], ['Ctrl + B', 'Toggle navigation'], ['Ctrl + P / N', 'Previous / next step'], ['Ctrl + Shift + G', 'Check your code'], ['Ctrl + M', 'Focus editor / full screen / leave'], ['Ctrl + Q', 'Move between questions'], ['Alt + ↑ / ↓', 'Move between answers'], ['Ctrl + Alt', 'Choose the focused answer'], ['Esc', 'Close a dialog or full screen']];
+  const shortcutRows = [['Ctrl + K', 'Find a lesson'], ['Ctrl + B', 'Toggle navigation'], ['Ctrl + P / N', 'Previous / next step'], ['Ctrl + Shift + G', 'Check your code'], ['Ctrl + Shift + Y', 'Copy lesson link / code'], ['Ctrl + M', 'Focus editor / full screen / leave'], ['Ctrl + Q', 'Move between questions'], ['Alt + ↑ / ↓', 'Move between answers'], ['Ctrl + Alt', 'Choose the focused answer'], ['Esc', 'Close a dialog or full screen']];
   const help = el('dialog', { class: 'help-dialog', 'aria-labelledby': 'helpTitle' });
   help.append(el('div', {class:'dialog-top'},el('h2',{id:'helpTitle'},'A few useful shortcuts'),el('button',{class:'dialog-close',type:'button','aria-label':'Close shortcuts',onclick:()=>help.close()},'Esc')),
-    el('p',{class:'dialog-description'},'Keep your hands on the keyboard. Stay in your flow.'),el('div',{class:'shortcut-list'},shortcutRows.map(([keys,label])=>el('div',{},el('span',{},label),el('kbd',{},keys)))),el('p',{class:'dialog-note'},'Some desktop browsers reserve Ctrl+N and Ctrl+P. On-screen navigation is always available.'));
+    el('p',{class:'dialog-description'},'Keep your hands on the keyboard. Stay in your flow.'),el('div',{class:'shortcut-list'},shortcutRows.map(([keys,label])=>el('div',{},el('span',{},label),el('kbd',{},keys)))),el('p',{class:'dialog-note'},'Copy uses the current step’s link. Focus a copy button to choose another link or code block. Cmd+Shift+Y also works. Some desktop browsers reserve Ctrl+N and Ctrl+P.'));
   document.body.append(help);
   document.getElementById('shortcutsBtn').onclick = () => help.showModal();
   addEventListener('keydown', e => {
@@ -69,3 +70,4 @@ export function setupDiscovery({ idx, store }) {
   const offlineStatus = () => { status.textContent = navigator.serviceWorker?.controller ? 'Offline enabled' : 'Offline-first learning'; };
   navigator.serviceWorker?.addEventListener('controllerchange',offlineStatus); offlineStatus();
 }
+

@@ -1,6 +1,6 @@
 import { createStore } from './state.js';
 import { buildIndex, continueTarget, tally, locate } from './progress.js';
-import { blocks } from './render.js';
+import { blocks, copyLessonReference } from './render.js';
 import { codePage, questionsBlock, quizPage } from './code-page.js';
 import { disposeEditors } from './monaco-loader.js';
 import { el, go, linkBtn, toast } from './dom.js';
@@ -33,7 +33,7 @@ function markSteps(currentId) {
   document.querySelectorAll('#chapterNav .rail-step').forEach((a) => {
     const cur = a.dataset.id === currentId, done = store.isDone(a.dataset.id);
     a.className = 'rail-step' + (cur ? ' current' : done ? ' done' : '');
-    a.querySelector('.num').textContent = done && !cur ? '✓' : a.dataset.n;
+    a.querySelector('.num').textContent = done && !cur ? 'âœ“' : a.dataset.n;
     if (cur) a.setAttribute('aria-current', 'step'); else a.removeAttribute('aria-current');
   });
 }
@@ -44,7 +44,7 @@ function drawRail(activeChapter, blockLoc, currentId) {
   if (key !== railKey) {
     railKey = key;
     if (!inBlock) nav.replaceChildren(...chapterLinks(activeChapter));
-    else nav.replaceChildren(el('a', { class: 'rail-back', href: `#/module/${blockLoc.chapter.name}/${blockLoc.module.name}` }, `← ${blockLoc.module.title}`), el('div', { class: 'rail-block-title' }, blockLoc.block.title),
+    else nav.replaceChildren(el('a', { class: 'rail-back', href: `#/module/${blockLoc.chapter.name}/${blockLoc.module.name}` }, `â† ${blockLoc.module.title}`), el('div', { class: 'rail-block-title' }, blockLoc.block.title),
       el('div', { class: 'rail-steps' }, idx.list.slice(blockLoc.block.start, blockLoc.block.end).map((s, i) => el('a', { class: 'rail-step', href: `#/c/${s.id}`, 'data-id': s.id, 'data-n': String(i + 1) }, el('span', { class: 'num' }), el('span', { class: 'rail-step-title' }, s.title)))));
   }
   if (!inBlock) return;
@@ -66,8 +66,8 @@ function pageHeading(title, detail, t, symbol) {
 function blockRow(b, meta) {
   const t = stats(b.start, b.end), complete = t.total > 0 && t.done === t.total, many = b.end - b.start > 1;
   return el('a', { class: 'block-row', href: `#/c/${nextIn(b).id}`, style: t.done && !complete ? `--pct:${t.pct}%` : null },
-    el('div', { class: 'block-check' + (complete ? ' done' : t.done ? ' partial' : '') }, complete ? '✓' : ''),
-    el('div', {}, el('div', { class: 'block-title' }, b.title), el('div', { class: 'block-meta' }, meta ?? (many ? `${plural(b.end - b.start, 'step')} · ${status(t)}` : status(t)))),
+    el('div', { class: 'block-check' + (complete ? ' done' : t.done ? ' partial' : '') }, complete ? 'âœ“' : ''),
+    el('div', {}, el('div', { class: 'block-title' }, b.title), el('div', { class: 'block-meta' }, meta ?? (many ? `${plural(b.end - b.start, 'step')} Â· ${status(t)}` : status(t)))),
     el('span', { class: 'block-kind' }, KIND[b.kind]));
 }
 function home() {
@@ -80,9 +80,9 @@ function home() {
   ctx.textContent = 'Workspace / Overview'; drawRail();
   const cont = target ? (() => { const l = locate(idx, target.id), t=stats(l.block.start,l.block.end); return el('section', { class: 'continue' },
     el('div',{class:'continue-top'},el('span',{class:'continue-label'},el('span',{class:'status-dot'}),started ? 'PICK UP WHERE YOU LEFT OFF' : 'YOUR FIRST STEP'),el('span',{class:'badge'},KIND[l.block.kind])),
-    el('div',{class:'continue-main'},el('div',{},el('div', { class: 'continue-title' }, l.block.kind === 'workshop' ? l.block.title : target.title), el('div', { class: 'continue-meta' }, `${l.chapter.title} / ${l.module.title}`)), linkBtn(started ? 'Continue learning →' : 'Start learning →', `#/c/${target.id}`)),
+    el('div',{class:'continue-main'},el('div',{},el('div', { class: 'continue-title' }, l.block.kind === 'workshop' ? l.block.title : target.title), el('div', { class: 'continue-meta' }, `${l.chapter.title} / ${l.module.title}`)), linkBtn(started ? 'Continue learning â†’' : 'Start learning â†’', `#/c/${target.id}`)),
     el('div',{class:'continue-bottom'},el('span',{},`Step ${l.step} of ${l.of}`),bar(t.pct),el('span',{},t.done ? `${t.done} complete` : 'A good place to begin'))); })()
-    : el('section', { class: 'continue complete-course' }, icon('check'),el('div', { class: 'continue-title' }, 'Look how far you’ve come.'),el('p',{},'Every lesson completed. Keep your skills sharp with a little practice.'),linkBtn('Explore workshops →','#/practice/workshops'));
+    : el('section', { class: 'continue complete-course' }, icon('check'),el('div', { class: 'continue-title' }, 'Look how far youâ€™ve come.'),el('p',{},'Every lesson completed. Keep your skills sharp with a little practice.'),linkBtn('Explore workshops â†’','#/practice/workshops'));
   const saved = store.status.ok;
   const practiceCards = [
     ['workshops','Workshops','Build with a little guidance.',allBlocks.filter(b=>b.kind==='workshop').length],
@@ -92,19 +92,19 @@ function home() {
   setView(el('section', { class: 'hero' }, el('div', {}, el('div', { class: 'kicker' },`${greeting()}. Make a little room to learn.`),el('h1',{},'Small steps.',el('br'),el('span',{},'Real progress.')),el('p',{},'Build your web development skills at your own pace. Your next step is right here.'))),
     el('div',{class:'dashboard-grid'},el('div',{class:'dashboard-main'},cont,
       el('section',{class:'curriculum-section'},el('div',{class:'section-head'},el('div',{},el('span',{class:'section-eyebrow'},'THE LEARNING PATH'),el('h2',{},'Your curriculum')),el('span',{},`${chapters.length} CHAPTERS`)),
-        el('div',{class:'catalog home-catalog'},chapters.map((ci,i)=>{const t=stats(ci.start,ci.end);return el('a',{class:'course chapter-course',href:`#/chapter/${ci.name}`},el('div',{class:'chapter-glyph'},icon(ci.name)),el('div',{class:'course-copy'},el('div',{class:'course-title'},ci.title,el('span',{class:'chapter-index'},String(i+1).padStart(2,'0'))),el('div',{class:'course-meta'},`${plural(ci.modules.length,'module')} · ${plural(t.total,'lesson')}`)),el('div',{class:'course-measure'},el('span',{},t.done ? `${t.pct}%` : 'Not started'),bar(t.pct,'course-progress')),icon('arrow','course-arrow'));}))),
+        el('div',{class:'catalog home-catalog'},chapters.map((ci,i)=>{const t=stats(ci.start,ci.end);return el('a',{class:'course chapter-course',href:`#/chapter/${ci.name}`},el('div',{class:'chapter-glyph'},icon(ci.name)),el('div',{class:'course-copy'},el('div',{class:'course-title'},ci.title,el('span',{class:'chapter-index'},String(i+1).padStart(2,'0'))),el('div',{class:'course-meta'},`${plural(ci.modules.length,'module')} Â· ${plural(t.total,'lesson')}`)),el('div',{class:'course-measure'},el('span',{},t.done ? `${t.pct}%` : 'Not started'),bar(t.pct,'course-progress')),icon('arrow','course-arrow'));}))),
       el('section',{class:'small-section'},el('div',{class:'section-head'},el('div',{},el('span',{class:'section-eyebrow'},'LEARN BY DOING'),el('h2',{},'Make something of it.'))),el('div',{class:'practice-grid'},practiceCards.map(([k,title,detail,n])=>el('a',{class:'practice-card',href:`#/practice/${k}`},el('div',{class:'practice-card-top'},icon(k),icon('arrow')),el('h3',{},title),el('p',{},detail),el('span',{class:'practice-count'},`${n} ${k==='projects'?'projects':k==='labs'?'exercises':'workshops'}`)))))),
     el('aside',{class:'journey-panel','aria-label':'Your learning progress'},el('div',{class:'section-eyebrow'},'THE BIG PICTURE'),el('h2',{},'Your journey'),el('div',{class:'journey-ring',style:`--progress:${all.pct}%`,'aria-label':`${all.pct}% of curriculum completed`},el('div',{},el('strong',{},String(all.pct),el('span',{},'%')),el('small',{},'COMPLETE'))),el('p',{class:'journey-caption'},all.done ? `${all.done.toLocaleString()} steps forward. Keep going.` : 'Every expert started at zero.'),
       el('div',{class:'journey-stats'},el('div',{},el('span',{},'Lessons completed'),el('strong',{},all.done.toLocaleString(),el('small',{},` / ${all.total.toLocaleString()}`))),el('div',{},el('span',{},'Topics finished'),el('strong',{},blocksDone,el('small',{},` / ${allBlocks.length}`))),el('div',{},el('span',{},'Projects built'),el('strong',{},projectsDone,el('small',{},` / ${projects.length}`)))),
       el('div',{class:'journey-note'},icon('book'),el('p',{},'No rush. No streak to lose.',el('span',{},'Just you, getting a little better.'))),el('a',{class:'exam-link',href:'#/exam'},'About certification',icon('arrow')))),
-    el('footer', { class: 'footer' },el('span',{},el('span',{class:'status-dot'}),saved ? 'Your progress stays on this device' : 'Storage full or blocked — progress is not being saved'),el('span',{},'RESPONSIVE WEB DESIGN · V9')));
+    el('footer', { class: 'footer' },el('span',{},el('span',{class:'status-dot'}),saved ? 'Your progress stays on this device' : 'Storage full or blocked â€” progress is not being saved'),el('span',{},'RESPONSIVE WEB DESIGN Â· V9')));
 }
 function chapter(name) {
   const ci = idx.chapters.find(c => c.name === name); if (!ci) return notFound();
   ctx.textContent = `Curriculum / ${ci.title}`; drawRail(name);
   setView(crumbs(homeCrumb, {label:ci.title}),pageHeading(ci.title,descriptions[name] ?? 'Explore the next part of your learning path.',stats(ci.start,ci.end),name),
-    el('div',{class:'section-head list-heading'},el('h2',{},'Your modules'),el('span',{},`${ci.modules.length} MODULES · IN CURRICULUM ORDER`)),
-    el('div',{class:'catalog'},ci.modules.map((m,i)=>{const t=stats(m.start,m.end);return course(`#/module/${ci.name}/${m.name}`,m.title,`${plural(t.total,'lesson')} · ${m.moduleType==='cert-project'?'Certification project':status(t)}`,t,i+1);})));
+    el('div',{class:'section-head list-heading'},el('h2',{},'Your modules'),el('span',{},`${ci.modules.length} MODULES Â· IN CURRICULUM ORDER`)),
+    el('div',{class:'catalog'},ci.modules.map((m,i)=>{const t=stats(m.start,m.end);return course(`#/module/${ci.name}/${m.name}`,m.title,`${plural(t.total,'lesson')} Â· ${m.moduleType==='cert-project'?'Certification project':status(t)}`,t,i+1);})));
 }
 function moduleView(chName, modName) {
   const ci=idx.chapters.find(c=>c.name===chName),m=ci?.modules.find(x=>x.name===modName);if(!m)return notFound();
@@ -118,9 +118,9 @@ function practice(kind) {
   ctx.textContent=`Practice / ${title}`;drawRail('practice:'+kind);const rows=[];
   for(const ci of idx.chapters)for(const m of ci.modules)for(const b of m.blocks){
     const hit=kind==='workshops'?b.kind==='workshop':kind==='labs'?(b.kind==='lab'||b.kind==='review')&&m.moduleType!=='cert-project':m.moduleType==='cert-project';
-    if(hit)rows.push(blockRow(b,`${ci.title} · ${m.title}`));
+    if(hit)rows.push(blockRow(b,`${ci.title} Â· ${m.title}`));
   }
-  const filter=el('input',{class:'list-filter',type:'search',placeholder:'Filter by name or topic…','aria-label':`Filter ${title.toLowerCase()}`}),count=el('span',{class:'filter-count',role:'status'},`${rows.length} available`),empty=el('p',{class:'empty-state',hidden:true},'No matches. Try another topic.');
+  const filter=el('input',{class:'list-filter',type:'search',placeholder:'Filter by name or topicâ€¦','aria-label':`Filter ${title.toLowerCase()}`}),count=el('span',{class:'filter-count',role:'status'},`${rows.length} available`),empty=el('p',{class:'empty-state',hidden:true},'No matches. Try another topic.');
   filter.oninput=()=>{const q=filter.value.trim().toLowerCase();let n=0;for(const r of rows){r.hidden=!r.textContent.toLowerCase().includes(q);if(!r.hidden)n++;}count.textContent=`${n} available`;empty.hidden=n>0;};
   const detail=kind==='workshops'?'Turn an idea into a working page, one guided step at a time.':kind==='labs'?'Try it yourself, then revisit the concepts that make it click.':'Bring everything you have learned into a complete project.';
   setView(crumbs(homeCrumb,{label:title}),pageHeading(title,detail),el('div',{class:'list-toolbar'},filter,count),el('div',{class:'rows-list'},rows),empty);
@@ -133,8 +133,8 @@ async function exam() {
   if (location.hash !== '#/exam') return;
   setView(crumbs(homeCrumb, { label: 'Certification Exam' }), el('div', { class: 'exam-panel' }, el('h2', {}, item.title === 'Responsive Web Design Certification Exam' ? item.title : loc.block.title),
     desc ? el('div', { class: 'prose', style: 'margin:0 auto 18px' }, blocks(desc)) : null,
-    el('p', {}, 'The exam is taken in freeCodeCamp’s own exam environment app. The curriculum export this app is built from contains only that pointer — no exam questions — so there is nothing to practise here beyond the projects and quizzes.'),
-    linkBtn('Open the reference entry →', `#/c/${item.id}`)));
+    el('p', {}, 'The exam is taken in freeCodeCampâ€™s own exam environment app. The curriculum export this app is built from contains only that pointer â€” no exam questions â€” so there is nothing to practise here beyond the projects and quizzes.'),
+    linkBtn('Open the reference entry â†’', `#/c/${item.id}`)));
 }
 const chunks = new Map();
 // A failed or hung request used to be cached as a permanently-pending promise, so that lesson could never load again until a
@@ -150,7 +150,7 @@ const loadBlock = (name) => {
 async function challenge(id) {
   const loc = locate(idx, id); if (!loc) return notFound();
   store.visit(id); ctx.textContent = `${loc.chapter.title} / ${loc.module.title}`.toUpperCase(); drawRail(manifest.chapters.find((m) => m.name === loc.chapter.name)?.chapterType === 'exam' ? 'exam' : loc.chapter.name, loc, id);
-  const slow = setTimeout(() => { if (location.hash === `#/c/${id}`) setView(el('p', { class: 'muted-note' }, 'Loading lesson…')); }, 350);
+  const slow = setTimeout(() => { if (location.hash === `#/c/${id}`) setView(el('p', { class: 'muted-note' }, 'Loading lessonâ€¦')); }, 350);
   let chunk;
   try { chunk = await loadBlock(loc.block.name); }
   catch { clearTimeout(slow); if (location.hash !== `#/c/${id}`) return; setView(el('h1', {}, 'Could not load this lesson'), el('p', { class: 'muted-note' }, 'The local server did not answer. Make sure it is still running (and that Termux is not paused or battery-restricted), then try again.'), el('button', { class: 'btn', type: 'button', onclick: () => challenge(id) }, 'Try again')); return; }
@@ -161,8 +161,8 @@ async function challenge(id) {
   const head = el('div', { class: 'chal-head' }, el('div', { class: 'chal-kicker' }, el('span', { class: 'tag' }, KIND[kind]), loc.of > 1 ? el('span', {}, `Step ${loc.step} of ${loc.of}`) : null, loc.module.moduleType === 'cert-project' ? el('span', { class: 'tag' }, 'Certification Project') : null), el('h1', { class: 'chal-title' }, kind === 'workshop' ? loc.block.title : c.title));
   const dense = list.length > 24;
   const steps = list.length > 1 ? el('div', { class: 'step-nav' }, el('div', { class: 'step-dots' + (dense ? ' dense' : ''), role: 'group', 'aria-label': 'Steps in this lesson' }, list.map((x, i) => el('button', { type: 'button', class: 'step-dot ' + (x.id === id ? 'current' : x.id in store.get().completed ? 'done' : ''), title: `${i + 1}. ${x.title}`, 'aria-label': `Step ${i + 1}: ${x.title}`, 'aria-current': x.id === id ? 'step' : null, onclick: () => go(`#/c/${x.id}`) }))), el('div', { class: 'step-count' }, `${loc.step} / ${loc.of}`)) : null;
-  const doneBar = () => el('div', { class: 'completion' }, el('div', { class: 'completion-status' + (store.isDone(id) ? '' : ' incomplete') }, el('span', { class: 'dot' }), el('span', {}, store.isDone(id) ? '✓ Completed' : 'Not completed yet')),
-    el('div', { class: 'nav-buttons' }, loc.prev ? linkBtn('← Back', `#/c/${loc.prev.id}`, 'ghost sm', 'prev') : null, loc.next ? linkBtn(kind === 'quiz' ? 'Next lesson →' : 'Next →', `#/c/${loc.next.id}`, 'sm', 'next') : null));
+  const doneBar = () => el('div', { class: 'completion' }, el('div', { class: 'completion-status' + (store.isDone(id) ? '' : ' incomplete') }, el('span', { class: 'dot' }), el('span', {}, store.isDone(id) ? 'âœ“ Completed' : 'Not completed yet')),
+    el('div', { class: 'nav-buttons' }, loc.prev ? linkBtn('â† Back', `#/c/${loc.prev.id}`, 'ghost sm', 'prev') : null, loc.next ? linkBtn(kind === 'quiz' ? 'Next lesson â†’' : 'Next â†’', `#/c/${loc.next.id}`, 'sm', 'next') : null));
   let body;
   if (c.hints && (kind === 'workshop' || kind === 'lab')) body = codePage({ c, loc, store });
   else if (c.questions) body = el('div', {}, el('div', { class: 'prose' }, blocks(c.interactive ?? c.description)), questionsBlock({ c, store, onDone: () => document.querySelector('.completion')?.replaceWith(doneBar()) }), doneBar());
@@ -170,14 +170,14 @@ async function challenge(id) {
   else if (kind === 'review') {
     const host = el('div', {}), mark = el('button', { class: 'btn sm', type: 'button' }, 'Mark reviewed');
     const draw = () => { host.replaceChildren(doneBar()); if (!store.isDone(id)) host.querySelector('.completion').append(mark); };
-    mark.onclick = () => { store.complete(id); toast('✓ Reviewed'); draw(); }; draw();
+    mark.onclick = () => { store.complete(id); toast('âœ“ Reviewed'); draw(); }; draw();
     body = el('div', {}, el('div', { class: 'prose' }, blocks(c.description ?? c.interactive)),
       c.assignment ? el('div', { class: 'panel', style: 'margin-top:26px' }, el('div', { class: 'panel-head' }, el('span', { class: 'ph-label' }, 'Assignment')), el('div', { class: 'prose', style: 'padding:16px 18px 2px' }, blocks(c.assignment))) : null, host);
   }
   else body = el('div', {}, el('div', { class: 'prose' }, blocks(c.description ?? c.interactive)), c.assignment ? el('div', { class: 'prose' }, blocks(c.assignment)) : null, doneBar());
   view.classList.add(c.hints && (kind === 'workshop' || kind === 'lab') ? 'wide' : 'reading'); setView(crumbs({ label: 'Overview', href: '#/' }, { label: loc.chapter.title, href: `#/chapter/${loc.chapter.name}` }, { label: loc.module.title, href: `#/module/${loc.chapter.name}/${loc.module.name}` }, { label: loc.block.title }), head, steps, body);
 }
-const notFound = () => setView(el('h1', {}, 'Not found'), el('a', { href: '#/' }, '← Back to the curriculum'));
+const notFound = () => setView(el('h1', {}, 'Not found'), el('a', { href: '#/' }, 'â† Back to the curriculum'));
 function route() {
   flushEditors(); // save what was typed in the page being left before its editors are torn down
   disposeEditors(); // Monaco editors are not freed just because their container leaves the page
@@ -200,12 +200,12 @@ function toggleSidebar() {
   const on=!document.body.classList.contains('rail-collapsed');document.body.classList.toggle('rail-collapsed',on);store.setSetting('railCollapsed',on);syncSidebar();
 }
 const flushEditors = () => document.querySelectorAll('.editor-shell').forEach((sh) => sh.rvstez?.flush());
-// ⋯ menu: export / import / reset the learner's progress (the storage layer already supported all three; nothing exposed them)
+// â‹¯ menu: export / import / reset the learner's progress (the storage layer already supported all three; nothing exposed them)
 function setupMenu() {
   const btn = document.getElementById('moreBtn'); if (!btn) return;
   const file = el('input', { type: 'file', accept: 'application/json,.json', hidden: true });
   const item = (text, fn, cls = '') => el('button', { class: ('menu-item ' + cls).trim(), role: 'menuitem', type: 'button', onclick: () => { close(); fn(); } }, text);
-  const menu = el('div', { class: 'menu', role: 'menu', hidden: true }, item('Export progress', exportProgress), item('Import progress…', () => file.click()), item('Reset all progress…', resetProgress, 'danger'));
+  const menu = el('div', { class: 'menu', role: 'menu', hidden: true }, item('Export progress', exportProgress), item('Import progressâ€¦', () => file.click()), item('Reset all progressâ€¦', resetProgress, 'danger'));
   document.body.append(menu, file);
   function close(refocus = false) { const wasOpen = !menu.hidden; menu.hidden = true; btn.setAttribute('aria-expanded', 'false'); if (wasOpen && refocus) btn.focus(); }
   btn.onclick = (e) => { e.stopPropagation(); menu.hidden = !menu.hidden; btn.setAttribute('aria-expanded', String(!menu.hidden)); if (!menu.hidden) { const r = btn.getBoundingClientRect(); menu.style.top = r.bottom + 6 + 'px'; menu.style.right = innerWidth - r.right + 'px'; menu.querySelector('.menu-item').focus(); } };
@@ -248,16 +248,16 @@ async function start() {
     addEventListener('keydown', globalShortcuts, true); // capture phase: our shortcuts take precedence over Monaco's own bindings for the same keys (it binds Ctrl+M and Ctrl+G)
     addEventListener('pagehide', flushEditors);
     if (new URLSearchParams(location.search).has('keys')) { // diagnostic: open the app with ?keys to see every key event's modifier state on screen
-      const box = el('div', { class: 'keys-debug' }, 'press a key…'); document.body.append(box);
-      for (const t of ['keydown', 'keyup']) addEventListener(t, (ev) => { box.textContent = `${t === 'keydown' ? '↓' : '↑'} ${ev.key}   ctrl:${+ev.ctrlKey} shift:${+ev.shiftKey} alt:${+ev.altKey}   in:${document.activeElement?.tagName}`; }, true);
+      const box = el('div', { class: 'keys-debug' }, 'press a keyâ€¦'); document.body.append(box);
+      for (const t of ['keydown', 'keyup']) addEventListener(t, (ev) => { box.textContent = `${t === 'keydown' ? 'â†“' : 'â†‘'} ${ev.key}   ctrl:${+ev.ctrlKey} shift:${+ev.shiftKey} alt:${+ev.altKey}   in:${document.activeElement?.tagName}`; }, true);
     }
     if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js', { updateViaCache: 'none' }).catch(() => {}); // offline copy of the app: see sw.js
   } catch (e) { setView(el('h1', {}, 'Could not load the curriculum'), el('p', { class: 'muted-note' }, String(e.message))); }
 }
 
 // ---- keyboard ----
-// Ctrl+B sidebar · Ctrl+P / Ctrl+N previous / next step · Ctrl+Shift+G check (leaves the editor and shows the results) ·
-// Ctrl+M editor: focus it → full screen → leave · Ctrl+Q cycle questions · Alt+↑/↓ move between answers · Ctrl+Alt pick the focused answer.
+// Ctrl+B sidebar Â· Ctrl+P / Ctrl+N previous / next step Â· Ctrl+Shift+G check (leaves the editor and shows the results) Â·
+// Ctrl+M editor: focus it â†’ full screen â†’ leave Â· Ctrl+Shift+Y copy a lesson reference Â· Ctrl+Q cycle questions Â· Alt+â†‘/â†“ move between answers Â· Ctrl+Alt pick the focused answer.
 function nearestShell() {
   const list = [...document.querySelectorAll('.editor-shell')]; if (!list.length) return null;
   const focused = list.find((sh) => sh.rvstez?.hasFocus()); if (focused) return focused;
@@ -265,8 +265,8 @@ function nearestShell() {
   return list.sort((a, b) => dist(a) - dist(b))[0];
 }
 const showChecks = () => requestAnimationFrame(() => document.querySelector('.run-bar')?.scrollIntoView({ block: 'start', behavior: 'smooth' }));
-// Moving focus or leaving the page in the middle of a key chord (Ctrl+Shift+… still held) can leave a modifier latched on some Android
-// keyboards — afterwards plain arrow keys select text as if Shift were down. So anything that changes focus waits until the modifier keys
+// Moving focus or leaving the page in the middle of a key chord (Ctrl+Shift+â€¦ still held) can leave a modifier latched on some Android
+// keyboards â€” afterwards plain arrow keys select text as if Shift were down. So anything that changes focus waits until the modifier keys
 // are up (or 1.5s at most).
 function afterRelease(fn) {
   let done = false; const run = () => { if (done) return; done = true; removeEventListener('keyup', onUp, true); clearTimeout(t); fn(); };
@@ -277,6 +277,9 @@ function globalShortcuts(e) {
   if(document.querySelector('dialog[open]'))return;
   const k = e.key.toLowerCase(), inEditor = !!e.target.closest?.('.monaco-editor');
   const take = () => { e.preventDefault(); e.stopPropagation(); };
+  if ((e.ctrlKey || e.metaKey) && e.shiftKey && !e.altKey && k === 'y') {
+    take(); e.stopImmediatePropagation(); if (!e.repeat) afterRelease(copyLessonReference); return;
+  }
   if (e.ctrlKey && !e.altKey && !e.shiftKey) {
     if (k === 'b') { take(); toggleSidebar(); return; }
     if ((k === 'p' || k === 'n') && document.querySelector(`[data-nav=${k === 'p' ? 'prev' : 'next'}]`)) { take(); const sel = `[data-nav=${k === 'p' ? 'prev' : 'next'}]`; if (!e.repeat) afterRelease(() => document.querySelector(sel)?.click()); return; }

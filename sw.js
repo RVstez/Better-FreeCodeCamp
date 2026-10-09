@@ -24,3 +24,4 @@ self.addEventListener('fetch', (e) => {
   if (r.method !== 'GET' || u.origin !== location.origin) return;
   e.respondWith(FRESH.test(u.pathname) ? networkFirst(r) : cacheFirst(r));
 });
+

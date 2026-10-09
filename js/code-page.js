@@ -18,7 +18,7 @@ export function codePage({ c, loc, store }) {
     onInput: (files, now) => { if (now) { if (dirty) { persist(files); dirty = false; } } else { dirty = true; shell.setSaved(''); autosave(); } },
   });
 
-  const rows = c.hints.map((h) => el('div', { class: 'result-row' }, el('div', { class: 'result-mark' }, '○'), el('div', { class: 'result-text' }, inline(h.text[0]?.c ?? []))));
+  const rows = c.hints.map((h) => el('div', { class: 'result-row' }, el('div', { class: 'result-mark' }, '○'), el('div', { class: 'result-text' }, inline(h.text[0]?.c ?? [], false))));
   const results = el('div', { class: 'results' }, rows);
   const status = el('span', { class: 'run-status', role: 'status', 'aria-live': 'polite' });
   const setStatus = (t) => { status.textContent = t; shell.setStatus(t); };
@@ -56,7 +56,7 @@ export function questionsBlock({ c, store, onDone }) {
   c.questions.forEach((q, qi) => {
     const fb = el('div', { class: 'quiz-feedback', hidden: '' }); const btns = [];
     const choices = el('div', { class: 'quiz-choices' }, q.answers.map((a, ai) => {
-      const code = asChoiceCode(a.text); const b = el('button', { class: 'quiz-choice', type: 'button' }); b.append(code ? el('code', { class: 'choice-code' }, code) : blocks(a.text));
+      const code = asChoiceCode(a.text); const b = el('button', { class: 'quiz-choice', type: 'button' }); b.append(code ? el('code', { class: 'choice-code' }, code) : blocks(a.text, false));
       b.onclick = () => {
         if (got.has(qi)) return; // already solved: leave it as it is
         btns.forEach((x) => x.classList.remove('selected', 'correct', 'incorrect')); const ok = ai === q.correct;
@@ -106,7 +106,7 @@ export function quizPage({ c, store, onDone }) {
       const next = el('button', { class: 'btn', type: 'button', disabled: true }, n + 1 === qs.length ? 'See results →' : 'Next question →');
       next.onclick = () => { if (!answered) return; ++n < qs.length ? ask() : finish(); root.querySelector('.quiz-q, .quiz-result')?.focus({ preventScroll: true }); };
       const choices = el('div', { class: 'quiz-choices' }, q.options.map(([opt], oi) => {
-        const code = asChoiceCode(opt), b = el('button', { class: 'quiz-choice', type: 'button' }); b.append(code ? el('code', { class: 'choice-code' }, code) : blocks(opt));
+        const code = asChoiceCode(opt), b = el('button', { class: 'quiz-choice', type: 'button' }); b.append(code ? el('code', { class: 'choice-code' }, code) : blocks(opt, false));
         b.onclick = () => {
           if (answered) return; answered = true; const right = answerAt(q); if (oi === right) correct++;
           btns.forEach((x, k) => { x.classList.toggle('correct', k === right); x.classList.toggle('incorrect', k === oi && oi !== right); x.setAttribute('aria-pressed', String(k === oi)); x.setAttribute('aria-disabled', 'true'); });
@@ -129,3 +129,4 @@ export function quizPage({ c, store, onDone }) {
   intro();
   return root;
 }
+
