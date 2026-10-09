@@ -16,7 +16,7 @@ The app uses vanilla JavaScript and a small Node.js server. There is no framewor
 
 ## Getting started
 
-You will need Node.js and a modern browser. On GitHub, choose **Code â†’ Download ZIP**. The download is named `better-freecodecamp-main.zip` and contains the project folder `better-freecodecamp-main`.
+You will need Node.js and a modern browser. On GitHub, choose **Code -> Download ZIP**. The download is named `better-freecodecamp-main.zip` and contains the project folder `better-freecodecamp-main`.
 
 Extract the ZIP, then open a terminal in the directory containing the extracted folder and run:
 
