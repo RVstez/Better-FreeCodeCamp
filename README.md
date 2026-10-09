@@ -16,12 +16,12 @@ The app uses vanilla JavaScript and a small Node.js server. There is no framewor
 
 ## Getting started
 
-You will need Node.js and a modern browser. On GitHub, choose **Code -> Download ZIP**. The download is named `better-freecodecamp-main.zip` and contains the project folder `better-freecodecamp-main`.
+You will need Node.js and a modern browser. On GitHub, choose **Code -> Download ZIP**. The download is named `Better-FreeCodeCamp-main.zip` and contains the project folder `Better-FreeCodeCamp-main`.
 
 Extract the ZIP, then open a terminal in the directory containing the extracted folder and run:
 
 ```sh
-cd better-freecodecamp-main
+cd Better-FreeCodeCamp-main
 node tools/serve.mjs
 ```
 
@@ -35,7 +35,7 @@ node tools/serve.mjs 8081
 
 ### Android (Termux)
 
-Save `better-freecodecamp-main.zip` in your phone's Downloads folder. Install Node.js and the ZIP extractor, then enable access to shared storage:
+Save `Better-FreeCodeCamp-main.zip` in your phone's Downloads folder. Install Node.js and the ZIP extractor, then enable access to shared storage:
 
 ```sh
 pkg install nodejs unzip
@@ -46,11 +46,11 @@ Grant the Android storage permission when prompted, then run:
 
 ```sh
 unzip ~/storage/downloads/better-freecodecamp-main.zip -d ~
-cd ~/better-freecodecamp-main
+cd ~/Better-FreeCodeCamp-main
 node tools/serve.mjs
 ```
 
-The ZIP already contains the `better-freecodecamp-main` folder, so extract it into your home directory. See [TESTING.md](TESTING.md) for Windows and macOS/Linux commands and manual checks.
+The ZIP already contains the `Better-FreeCodeCamp-main` folder, so extract it into your home directory. See [TESTING.md](TESTING.md) for Windows and macOS/Linux commands and manual checks.
 
 Keep the server running during the initial load while the app caches its files. After updating the project, restart the server and refresh the browser to update the offline cache. Progress is stored per browser and address, including the port number.
 
