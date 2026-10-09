@@ -1,13 +1,31 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" prefix="og: https://ogp.me/ns#">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="color-scheme" content="dark">
 <meta name="theme-color" content="#101211">
+<meta name="description" content="Learn HTML and CSS with freeCodeCamp's Responsive Web Design curriculum, a live code editor, lesson checks, and progress saved on your device.">
+
+<!-- Keep this image in public/cc/ when serving the app with tools/serve.mjs.
+     For a public deployment, use its full HTTPS image URL in both image tags,
+     and add canonical and og:url tags using the published website URL. -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Better-FreeCodeCamp">
+<meta property="og:title" content="Better-FreeCodeCamp | Learn HTML and CSS Offline">
+<meta property="og:description" content="Learn HTML and CSS with freeCodeCamp's Responsive Web Design curriculum, a live code editor, lesson checks, and progress saved on your device.">
+<meta property="og:image" content="cc/20261009_141504.png">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:alt" content="Better-FreeCodeCamp social preview">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Better-FreeCodeCamp | Learn HTML and CSS Offline">
+<meta name="twitter:description" content="Learn HTML and CSS with freeCodeCamp's Responsive Web Design curriculum, a live code editor, lesson checks, and progress saved on your device.">
+<meta name="twitter:image" content="cc/20261009_141504.png">
+<meta name="twitter:image:alt" content="Better-FreeCodeCamp social preview">
 <meta http-equiv="Content-Security-Policy" content="connect-src 'self'">
 <link rel="icon" href="data:,">
-<title>Better-FreeCodeCamp</title>
+<title>Better-FreeCodeCamp | Learn HTML and CSS Offline</title>
 <link rel="stylesheet" href="css/fonts.css">
 <link rel="stylesheet" href="css/app.css">
 </head>
@@ -22,7 +40,7 @@
   <button class="rail-scrim" id="railScrim" aria-label="Close navigation" tabindex="-1" hidden></button>
   <main class="main">
     <header class="topbar"><div class="top-context"><button class="menu-btn" id="menuBtn" aria-label="Toggle navigation" aria-controls="rail" aria-expanded="true" title="Toggle navigation (Ctrl+B)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="M9 4v16"/></svg></button><div class="context" id="ctx">Your workspace</div></div><div class="top-actions"><button class="search-trigger" id="searchBtn" type="button" aria-label="Find a lesson"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 4 4"/></svg><span>Find a lesson</span><kbd>Ctrl K</kbd></button><span class="top-divider"></span><button class="icon" id="moreBtn" type="button" aria-haspopup="menu" aria-expanded="false" aria-label="Progress menu" title="Progress: export, import, reset">⋯</button></div></header>
-    <div class="content" id="view" tabindex="-1"></div>
+    <div class="content" id="view" tabindex="-1"><noscript><h1>Better-FreeCodeCamp</h1><p>Learn HTML and CSS through freeCodeCamp's Responsive Web Design curriculum, with lectures, workshops, labs, and quizzes. Enable JavaScript to use the code editor, live previews, lesson checks, and saved progress.</p></noscript></div>
   </main>
 </div>
 <script type="module" src="js/app.js"></script>
