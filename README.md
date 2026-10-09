@@ -72,8 +72,8 @@ Press **Ctrl+Shift+Y** or **Cmd+Shift+Y** to copy a reference. In workshop steps
 | `Ctrl+M` | Focus the editor, enter full screen, then leave it |
 | `Ctrl+Shift+Y` / `Cmd+Shift+Y` | Copy a lesson link or code block |
 | `Ctrl+Q` | Cycle through questions |
-| `Alt+â†‘` / `Alt+â†“` | Move between answers |
-| `Ctrl+Alt` | Choose the focused answer |
+| `Alt+Up arrow‘` / `Alt+â†“` | Move between answers |
+| `Ctrl+Down arrow` | Choose the focused answer |
 | `Escape` | Close a dialog, mobile navigation, or full-screen editing |
 
 Some desktop browsers reserve shortcuts such as `Ctrl+N` and `Ctrl+P`. The same actions are available through on-screen controls.
