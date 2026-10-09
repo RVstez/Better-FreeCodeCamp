@@ -4,9 +4,9 @@ This guide covers running Better-FreeCodeCamp from a GitHub ZIP download and che
 
 ## Download the project
 
-On the repository's GitHub page, choose **Code -> Download ZIP**. These instructions assume the main-branch download is named `better-freecodecamp-main.zip` and contains a folder named `better-freecodecamp-main`.
+On the repository's GitHub page, choose **Code -> Download ZIP**. These instructions assume the main-branch download is named `Better-FreeCodeCamp-main.zip` and contains a folder named `Better-FreeCodeCamp-main`.
 
-Extract the ZIP into the parent directory where the project should live. The archive creates the project folder itself. When extraction is complete, `better-freecodecamp-main/tools/serve.mjs` should exist. If the branch or repository name differs, use the actual archive and folder names in the commands below.
+Extract the ZIP into the parent directory where the project should live. The archive creates the project folder itself. When extraction is complete, `Better-FreeCodeCamp-main/tools/serve.mjs` should exist. If the branch or repository name differs, use the actual archive and folder names in the commands below.
 
 ## Android (Termux)
 
@@ -20,8 +20,8 @@ termux-setup-storage
 Grant the Android storage permission when prompted. Then extract the project into Termux's home directory and start the server:
 
 ```sh
-unzip ~/storage/downloads/better-freecodecamp-main.zip -d ~
-cd ~/better-freecodecamp-main
+unzip ~/storage/downloads/Better-FreeCodeCamp-main.zip -d ~
+cd ~/Better-FreeCodeCamp-main
 node tools/serve.mjs
 ```
 
@@ -33,8 +33,8 @@ Install Node.js and save the ZIP in your Downloads folder. Open PowerShell and r
 
 ```powershell
 cd "$env:USERPROFILE\Downloads"
-Expand-Archive -LiteralPath .\better-freecodecamp-main.zip -DestinationPath .
-cd .\better-freecodecamp-main
+Expand-Archive -LiteralPath .\Better-FreeCodeCamp-main.zip -DestinationPath .
+cd .\Better-FreeCodeCamp-main
 node tools/serve.mjs
 ```
 
@@ -45,12 +45,12 @@ You can also extract the ZIP with File Explorer. Open a terminal in the extracte
 Install Node.js and save the ZIP in your Downloads folder. With `unzip` available, run:
 
 ```sh
-unzip ~/Downloads/better-freecodecamp-main.zip -d ~
-cd ~/better-freecodecamp-main
+unzip ~/Downloads/Better-FreeCodeCamp-main.zip -d ~
+cd ~/Better-FreeCodeCamp-main
 node tools/serve.mjs
 ```
 
-Alternatively, extract the ZIP with your file manager and run the server from the resulting `better-freecodecamp-main` project directory.
+Alternatively, extract the ZIP with your file manager and run the server from the resulting `Better-FreeCodeCamp-main` project directory.
 
 ## Starting and stopping the app
 
@@ -59,7 +59,7 @@ The server prints `Better-FreeCodeCamp running at http://localhost:8080`. Open t
 To stop the server, press `Ctrl+C` in its terminal. To start it again:
 
 ```sh
-cd ~/better-freecodecamp-main
+cd ~/Better-FreeCodeCamp-main
 node tools/serve.mjs
 ```
 
@@ -125,7 +125,7 @@ External lesson images may still require an internet connection. Their descripti
 | `Ctrl+M` | Focus the editor, enter full screen, then leave it |
 | `Ctrl+Shift+Y` / `Cmd+Shift+Y` | Copy a lesson reference; focus a copy icon or select a reference to choose another item |
 | `Ctrl+Q` | Cycle through questions |
-| `Alt+up arrow‘` / `Alt+down arrow“` | Move between answers |
+| `Alt+ArrowUp` / `Alt+ArrowDown` | Move between answers |
 | `Ctrl+Alt` | Choose the focused answer |
 
 Some desktop browsers reserve `Ctrl+N` and `Ctrl+P`; on-screen navigation is also available. In workshop instructions, the copy shortcut defaults to the last inline link. In lectures, it uses the nearest visible item.
