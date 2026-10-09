@@ -1,7 +1,5 @@
 # Better-FreeCodeCamp
 
-This build refines the existing dark interface with a sage accent, subtle grain, clearer layouts, and more comfortable navigation. It also fixes the desktop layout when the sidebar is hidden.
-
 Better-FreeCodeCamp is an offline-first learning app for the real freeCodeCamp Responsive Web Design v9
 curriculum. It runs from a tiny local server. Nothing is installed system-wide, and after the first load it
 keeps working even if the server stops.
@@ -9,6 +7,8 @@ keeps working even if the server stops.
 **Requirements:** [Node.js](https://nodejs.org) (any recent version) and a modern browser.
 
 ## Android (Termux)
+
+You'll the android app 'Termux'.
 
 ```shell
 pkg install nodejs
@@ -49,19 +49,6 @@ terminal running. To start it again later: `cd` into the folder and run `node to
 If port 8080 is busy, run `node tools/serve.mjs 8081` and open `http://localhost:8081`.
 After replacing the files with a newer build, stop the old server first (Ctrl+C, or `pkill -f serve.mjs` in Termux), then start it again.
 
-## What changed in this build
-
-- A clearer home page with a resume card, real progress totals, and a more legible curriculum path.
-- Consistent spacing, typography, borders, and controls across chapters, lessons, practice, and quizzes.
-- A restrained sage accent on charcoal surfaces, with a faint static background grain.
-- Lesson search from the header or **Ctrl+K**, plus search filters on practice pages.
-- Instructions alongside the editor on wide screens; Code/Preview tabs on phones.
-- Quiz feedback stays visible until you select **Next question**.
-- A proper mobile navigation drawer, visible focus states, and an in-app keyboard reference.
-- Hiding the desktop sidebar now gives the page its full width instead of squeezing the content into a collapsed grid column.
-
-The curriculum, test engine, saved-progress keys, and startup command stay compatible with the supplied build. After replacing the files, stop and restart the server. Keep using the same browser and localhost port to access your existing progress.
-
 ## Features
 
 - **The real curriculum**, in its real order: chapters, modules, workshops, labs, lectures, reviews, quizzes.
@@ -93,18 +80,6 @@ The curriculum, test engine, saved-progress keys, and startup command stay compa
 
 Open `http://localhost:8080/?keys`. A small box at the bottom-left shows, for every key you press, whether Ctrl, Shift and Alt are down (1) or up (0).
 If Shift shows `1` while you are not holding it, that is your keyboard or Android, not the app.
-
-## Verification of this refresh
-
-- All 39 existing unit tests passed.
-- 51 browser checks passed in Chromium, including home, chapter, module, practice, and workshop pages at 320, 390, 768, 1024, and 1440 pixels wide.
-- Verified lesson search, filtering, keyboard menus, mobile navigation, code/preview switching, full screen, code checking, and reload persistence.
-- Completed a full 20-question quiz and verified its score, original pass mark, and saved completion.
-- Stopped the local server and verified the cached editor, real lesson checks, and new search still worked.
-- Visually reviewed desktop, phone, workshop, lecture, search, and quiz screens.
-- Rechecked the sidebar open, closed, and reopened at 800, 1024, and 1440 pixels, including persistence after reload, and the mobile drawer at 390 and 760 pixels.
-
-These checks used desktop Chromium with resized viewports; a physical Android/Termux session was not available for this pass.
 
 ## Known gaps
 
