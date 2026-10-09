@@ -1,0 +1,138 @@
+# Testing Better-FreeCodeCamp â€” design refresh
+
+This build refines the existing dark interface with a sage accent, subtle grain, clearer layouts, and more comfortable navigation. It also fixes the desktop layout when the sidebar is hidden.
+
+Better-FreeCodeCamp is an offline-first learning app for the real freeCodeCamp Responsive Web Design v9
+curriculum. It runs from a tiny local server. Nothing is installed system-wide, and after the first load it
+keeps working even if the server stops.
+
+**Requirements:** [Node.js](https://nodejs.org) (any recent version) and a modern browser.
+
+## Android (Termux)
+
+```shell
+pkg install nodejs
+mkdir -p ~/bfv0.7
+tar -xf ~/storage/downloads/bfv0.7-fixed.tar -C ~/bfv0.7 --strip-components=1
+cd ~/bfv0.7
+node tools/serve.mjs
+```
+
+Tip: pull down the Termux notification and tap **Acquire wakelock**, and exempt Termux from battery optimisation.
+Android can pause Termux in the background; the app now copes with that after its first load, but the first load needs the server.
+
+## Windows
+
+1. Install Node.js from [nodejs.org](https://nodejs.org).
+2. In Command Prompt, in the folder holding the download:
+   ```cmd
+   mkdir better-freecodecamp
+   tar -xf bfv0.7-fixed.tar -C better-freecodecamp --strip-components=1
+   cd better-freecodecamp
+   node tools\serve.mjs
+   ```
+   (If `tar` isn't recognised, extract with 7-Zip instead; the files are inside a `better-freecodecamp` folder.)
+
+## macOS
+
+```shell
+mkdir -p ~/better-freecodecamp
+tar -xf ~/Downloads/bfv0.7-fixed.tar -C ~/better-freecodecamp --strip-components=1
+cd ~/better-freecodecamp
+node tools/serve.mjs
+```
+
+## Opening it
+
+The terminal prints `Better-FreeCodeCamp running at http://localhost:8080`. Open that in your browser and leave the
+terminal running. To start it again later: `cd` into the folder and run `node tools/serve.mjs`.
+If port 8080 is busy, run `node tools/serve.mjs 8081` and open `http://localhost:8081`.
+After replacing the files with a newer build, stop the old server first (Ctrl+C, or `pkill -f serve.mjs` in Termux), then start it again.
+
+## What changed in this build
+
+- A clearer home page with a resume card, real progress totals, and a more legible curriculum path.
+- Consistent spacing, typography, borders, and controls across chapters, lessons, practice, and quizzes.
+- A restrained sage accent on charcoal surfaces, with a faint static background grain.
+- Lesson search from the header or **Ctrl+K**, plus search filters on practice pages.
+- Instructions alongside the editor on wide screens; Code/Preview tabs on phones.
+- Quiz feedback stays visible until you select **Next question**.
+- A proper mobile navigation drawer, visible focus states, and an in-app keyboard reference.
+- Hiding the desktop sidebar now gives the page its full width instead of squeezing the content into a collapsed grid column.
+- Copy icons beside lesson URLs, file paths, and link values inside code examples, plus a button to copy each full code block. `Ctrl+Shift+Y` (or `Cmd+Shift+Y`) copies a lesson reference without selecting it manually.
+
+The curriculum, test engine, saved-progress keys, and startup command stay compatible with the supplied build. After replacing the files, stop and restart the server. Keep using the same browser and localhost port to access your existing progress.
+
+## Features
+
+- **The real curriculum**, in its real order: chapters, modules, workshops, labs, lectures, reviews, quizzes.
+- **Real checking.** freeCodeCamp's own test engine runs each lesson's original tests in a sandbox.
+- **A real editor.** Monaco (the engine behind VS Code, and freeCodeCamp's own), with a live preview, width presets
+  (Fit / 768 / 375), font size, reset, copy, full screen and autosave.
+- **Lectures** with "Check your understanding" cards; **quizzes** one question at a time with the real pass mark and a best-attempt record;
+  **reviews** you mark as reviewed.
+- **Practice pages** for workshops, labs and reviews, and certification projects, plus the exam reference.
+- **Progress saved on your device**, with export, import and reset in the â‹¯ menu.
+- **Works offline after the first load**, even if the local server stops or is paused.
+
+## Keyboard shortcuts
+
+| Keys | Does |
+|---|---|
+| `Ctrl+K` or `Cmd+K` | Find a lesson; arrow keys select a result and Enter opens it |
+| `?` | Open the keyboard reference when outside a text field or editor |
+| `Escape` | Close search, the keyboard reference, the mobile drawer, or full-screen editing |
+| `Ctrl+B` | Show or hide the sidebar |
+| `Ctrl+P` / `Ctrl+N` | Previous / next step (also while typing in the editor) |
+| `Ctrl+Shift+G` | Check your code: leaves the editor and scrolls to the results |
+| `Ctrl+M` | Editor: first press focuses it and scrolls to it; second opens full screen; third leaves full screen and the editor and shows the checks |
+| `Ctrl+Shift+Y` or `Cmd+Shift+Y` | Copy the current step's last inline link; focus a copy icon or select its reference to choose another item. In lectures, copy the nearest visible item. |
+| `Ctrl+Q` | Cycle through questions |
+| `Alt+â†‘` / `Alt+â†“` | Move between answers |
+| `Ctrl+Alt` | Pick the focused answer |
+
+## If keys seem stuck
+
+Open `http://localhost:8080/?keys`. A small box at the bottom-left shows, for every key you press, whether Ctrl, Shift and Alt are down (1) or up (0).
+If Shift shows `1` while you are not holding it, that is your keyboard or Android, not the app.
+
+## Checking lesson copying
+
+1. Open Cat Photo App, step 8. Tap the icon beside the `relaxing-cat.jpg` URL and paste into the editor's `src` value. Only the URL should be pasted.
+2. With the editor focused, press `Ctrl+Shift+Y`. It should copy the requested `relaxing-cat.jpg` URL rather than the freeCodeCamp logo example, while keeping the code, cursor, and focus in place.
+3. Focus the copy icon under the logo code example and press the shortcut. It should copy that logo URL. Use the top-right icon to copy the whole code example, with its original whitespace.
+4. Try a step with an `href` URL and a lesson using relative paths or CSS `url(...)`. Each copy control should copy its exact value.
+5. On a narrow touch screen, check that the copy icons remain visible, can be tapped, and do not make the page overflow. A successful copy shows a check mark and a confirmation message.
+6. Open a quiz and select answers normally. Copy controls should not appear inside answer buttons. The normal `Ctrl+C` shortcut still copies your selection.
+
+Restart the local server and refresh the page after updating these project files so the offline cache uses the new controls.
+
+### Applying the copy-controls update to an existing Termux installation
+
+Stop the running server with `Ctrl+C`, download `bfv0.7-copy-update.tar`, then run:
+
+```shell
+tar -xf ~/storage/downloads/bfv0.7-copy-update.tar -C ~/bfv0.7
+cd ~/bfv0.7
+node tools/serve.mjs
+```
+
+This update contains eight project files: README.md, TESTING.md, the lesson renderer, keyboard handler, shortcut reference/icons, code-page integration, stylesheet, and generated service worker. Extract it directly into the existing project folder, then refresh your browser.
+
+## Verification of this refresh
+
+- All 39 existing unit tests passed.
+- 51 browser checks passed in Chromium, including home, chapter, module, practice, and workshop pages at 320, 390, 768, 1024, and 1440 pixels wide.
+- Verified lesson search, filtering, keyboard menus, mobile navigation, code/preview switching, full screen, code checking, and reload persistence.
+- Completed a full 20-question quiz and verified its score, original pass mark, and saved completion.
+- Stopped the local server and verified the cached editor, real lesson checks, and new search still worked.
+- Visually reviewed desktop, phone, workshop, lecture, search, and quiz screens.
+- Rechecked the sidebar open, closed, and reopened at 800, 1024, and 1440 pixels, including persistence after reload, and the mobile drawer at 390 and 760 pixels.
+- For the copy-controls update, all 39 unit tests and 36 focused Chromium browser checks passed. These covered exact URL and code copying, Ctrl/Cmd+Shift+Y, editor focus/cursor preservation, normal Ctrl+C, clipboard fallback and failure messages, quiz interaction, offline reload, and copy-control layout/tap areas at 320, 390, 760, 1024, and 1440 pixels.
+
+These checks used desktop Chromium with resized viewports; a physical Android/Termux session was not available for this pass.
+
+## Known gaps
+
+- Lesson images come from freeCodeCamp's servers: they need a connection and show their description when offline.
+- The exam is a pointer only in the source data; there are no exam questions.
