@@ -12,6 +12,7 @@ import crypto from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 
 // Never cached. Only matters in a flat layout, where the web root is the project root.
+const SKIP_FILES = new Set(['css/20261009_141504.png']); // social-preview image, not needed offline
 const SKIP_TOP_LEVEL = new Set([
   'sw.js', 'tools', 'node_modules', 'README.md', 'TESTING.md', 'package.json', 'package-lock.json',
 ]);
@@ -49,6 +50,7 @@ function listFiles(dir, base = dir, out = []) {
     if (entry.name.startsWith('.')) continue;
     const full = path.join(dir, entry.name);
     const rel = path.relative(base, full).split(path.sep).join('/');
+    if (SKIP_FILES.has(rel)) continue;
     if (!rel.includes('/') && SKIP_TOP_LEVEL.has(entry.name)) continue;
     if (entry.isDirectory()) listFiles(full, base, out);
     else if (entry.isFile()) out.push(rel);
